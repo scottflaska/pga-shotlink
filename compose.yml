@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  
+  pga_shotlink:
+    build: .
+    image: pga_shotlink
+    container_name: pga_shotlink
+    environment:
+      - PASSWORD=nfl
+      - ROOT=true
+      - USERID=${xUID}
+    ports:
+      - "8797:8787"
+    restart: always
+    volumes:
+      - .:/home/rstudio/project
