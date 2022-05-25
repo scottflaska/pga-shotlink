@@ -7,14 +7,23 @@ library(tidyverse)
 
 strokes = read_csv(file = "~/project/data/strokes.csv")
 
-strokes %>% 
+intial_plot = strokes %>% 
   mutate(hole = factor(hole, ordered = T)) %>% 
   filter(x > 0) %>% 
   ggplot(mapping = aes(x = x,
                        y = y,
                        color = hole)) +
   geom_point(alpha = 0.25) +
+  theme(legend.position = "none")
+
+intial_plot
+```
+
+![](readme_files/figure-gfm/initial_plot-1.png)<!-- -->
+
+``` r
+intial_plot +
   coord_equal()
 ```
 
-![](readme_files/figure-gfm/setup-1.png)<!-- -->
+![](readme_files/figure-gfm/coord_equal_plot-1.png)<!-- -->

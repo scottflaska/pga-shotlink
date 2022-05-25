@@ -5,19 +5,30 @@ output:
     toc: true
 ---
 
-```{r setup, message=FALSE}
+```{r initial_plot, message=FALSE}
 
 library(tidyverse)
 
 strokes = read_csv(file = "~/project/data/strokes.csv")
 
-strokes %>% 
+intial_plot = strokes %>% 
   mutate(hole = factor(hole, ordered = T)) %>% 
   filter(x > 0) %>% 
   ggplot(mapping = aes(x = x,
                        y = y,
                        color = hole)) +
   geom_point(alpha = 0.25) +
+  theme(legend.position = "none")
+
+intial_plot
+
+```
+
+
+
+```{r coord_equal_plot, message=FALSE}
+
+intial_plot +
   coord_equal()
 
 ```
