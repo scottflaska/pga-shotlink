@@ -1,6 +1,12 @@
-library("tidyverse")
+library(tidyverse)
 
-event = read_delim(file = "data/sample_download/event-ttc-2011.txt",
-                   delim = ";")
+strokes = read_csv(file = "~/project/data/strokes.csv")
 
-
+strokes %>% 
+  mutate(hole = factor(hole, ordered = T)) %>% 
+  filter(x > 0) %>% 
+  ggplot(mapping = aes(x = x,
+                       y = y,
+                       color = hole)) +
+  geom_point(alpha = 0.25) +
+  coord_equal()
