@@ -3,10 +3,6 @@ title: "pga_shotlink"
 output: 
   github_document:
     toc: true
-    toc_float:
-      collapsed: false
-      smooth_scroll: true
-
 ---
 
 ```{r setup, include=FALSE}
