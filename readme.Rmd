@@ -24,4 +24,5 @@ intial_plot = strokes %>%
 
 intial_plot
 
+
 ```
