@@ -18,17 +18,10 @@ intial_plot = strokes %>%
                        y = y,
                        color = hole)) +
   geom_point(alpha = 0.25) +
-  theme(legend.position = "none")
+  coord_equal() +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill = "#161b22"))
 
 intial_plot
-
-```
-
-
-
-```{r coord_equal_plot, message=FALSE}
-
-intial_plot +
-  coord_equal()
 
 ```
