@@ -12,16 +12,21 @@ library(tidyverse)
 
 strokes = read_csv(file = "~/project/data/strokes.csv")
 
-intial_plot = strokes %>% 
+strokes_clean = strokes %>% 
+  mutate(result_cut = case_when(to_location_scorer == 'Fairway' ~ 'fairway',
+                                to_location_scorer %in% c('Intermediate Rough','Primary Rough') ~ 'rough',
+                                to_location_scorer == 'Green' ~ 'green',
+                                T ~ 'other'))
+
+intial_plot = strokes_clean %>%
   mutate(hole = factor(hole, ordered = T)) %>% 
-  filter(x > 0) %>% 
+  filter(x > 0) %>%
   ggplot(mapping = aes(x = x,
                        y = y,
-                       color = hole)) +
-  geom_point(alpha = 0.25) +
-  coord_equal() +
-  theme(legend.position = "none",
-        text = element_text(size = 15))
+                       color = result_cut)) +
+  geom_point() +
+  coord_equal(clip = "off") +
+  theme(legend.position = "bottom")
 
 intial_plot
 
