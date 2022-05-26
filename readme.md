@@ -15,7 +15,8 @@ intial_plot = strokes %>%
                        color = hole)) +
   geom_point(alpha = 0.25) +
   coord_equal() +
-  theme(legend.position = "none")
+  theme(legend.position = "none", 
+        text = element_text(size = 100))
 
 intial_plot
 ```
