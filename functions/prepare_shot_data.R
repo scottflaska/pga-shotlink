@@ -1,4 +1,4 @@
-prepare_stroke_level_data = function() {
+prepare_shot_data = function() {
   
   require(tidyverse)
   
@@ -9,7 +9,7 @@ prepare_stroke_level_data = function() {
   stroke_level_clean_names = stroke_level_import %>% 
     clean_names()
   
-  stroke_level = stroke_level_clean_names %>% 
+  shot_data = stroke_level_clean_names %>% 
     mutate(x = str_replace_all(string = x_coordinate,
                                pattern = ",",
                                replacement = "")) %>%
@@ -36,6 +36,6 @@ prepare_stroke_level_data = function() {
                                   T ~ 'other')) %>% 
     mutate(hole = factor(hole, ordered = T))
   
-  return(stroke_level)
+  return(shot_data)
   
 }
