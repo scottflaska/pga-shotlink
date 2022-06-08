@@ -11,7 +11,7 @@ check out stroke level
 ``` r
 library(tidyverse)
 
-stroke_level_import = read.delim(file = "data/sample_download/StrokeLevelTOURChamp.txt")
+stroke_level_import = read.delim(file = "~/project/data/sample_download/StrokeLevelTOURChamp.txt")
 
 stroke_level_import %>% 
   str()
@@ -340,3 +340,5 @@ stroke_level_with_cut %>%
     ## Warning: Removed 120 rows containing missing values (geom_point).
 
 ![](readme_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+Going to add these cleaning steps to a function

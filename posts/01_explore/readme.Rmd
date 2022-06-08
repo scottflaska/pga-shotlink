@@ -17,7 +17,7 @@ check out stroke level
 
 library(tidyverse)
 
-stroke_level_import = read.delim(file = "data/sample_download/StrokeLevelTOURChamp.txt")
+stroke_level_import = read.delim(file = "~/project/data/sample_download/StrokeLevelTOURChamp.txt")
 
 stroke_level_import %>% 
   str()
