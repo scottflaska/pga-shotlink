@@ -2,33 +2,231 @@
 title: Exploring [PGA ShotLink](https://www.pgatour.com/stats/shotlinkintelligence/overview.html)
 output: 
   github_document:
-    html_preview: false
+    html_preview: true
     toc: true
+    
 ---
 
-```{r initial_plot, message=FALSE}
+Take a look at the data
+
+Three data sets
+
+check out stroke level
+
+```{r, message=FALSE}
 
 library(tidyverse)
 
-strokes = read_csv(file = "~/project/data/strokes.csv")
+stroke_level_import = read.delim(file = "data/sample_download/StrokeLevelTOURChamp.txt")
 
-strokes_clean = strokes %>% 
+stroke_level_import %>% 
+  str()
+
+```
+
+Cool data, want to fix column names
+
+```{r, message=FALSE}
+
+
+library(janitor)
+
+stroke_level_clean_names = stroke_level_import %>% 
+  clean_names()
+
+
+stroke_level_clean_names %>% 
+  colnames()
+
+
+```
+
+Convert coordinates to numbers
+
+```{r, message=FALSE}
+
+stroke_level_num_coords = stroke_level_clean_names %>% 
+  mutate(x = str_replace_all(string = x_coordinate,
+                             pattern = ",",
+                             replacement = "")) %>%
+  mutate(y = str_replace_all(string = y_coordinate,
+                             pattern = ",",
+                             replacement = "")) %>% 
+  mutate(z = str_replace_all(string = z_coordinate,
+                             pattern = ",",
+                             replacement = "")) %>% 
+  mutate(x = as.numeric(x),
+         y = as.numeric(y),
+         z = as.numeric(z)) %>% 
+  select(-x_coordinate, 
+         -y_coordinate, 
+         -z_coordinate)
+
+stroke_level_num_coords %>% 
+  select(x,y,z) %>% 
+  as_tibble() %>% 
+  head(20)
+
+
+```
+
+Notice that there are zeros, want to take a look at the data, 
+
+```{r, message=FALSE}
+
+stroke_level_num_coords %>% 
+  mutate(hole = factor(hole, ordered = T)) %>% 
+  ggplot(mapping = aes(x = x,
+                       y = y,
+                       color = hole)) +
+  geom_point() +
+  coord_equal(clip = "off") +
+  theme()
+
+
+```
+
+
+Really encouraging except for the zeros
+
+
+```{r, message=FALSE}
+
+n_zeros = stroke_level_num_coords %>% 
+  filter(x == 0) %>% 
+  as.data.frame() %>% 
+  nrow()
+
+n_zeros/nrow(stroke_level_num_coords)
+
+```
+
+What are the zeros?
+
+```{r, message=FALSE}
+
+stroke_level_num_coords %>% 
+  select(round,
+         hole,
+         player,
+         shot,
+         x) %>% 
+  arrange(round,
+          hole,
+          player,
+          shot) %>% 
+  as.data.frame() %>% 
+  head(25)
+
+```
+
+These are shots that finish in the hole, READ THE DOCS, convert to NAs
+
+```{r, message=FALSE}
+
+stroke_level_no_zeros = stroke_level_num_coords %>% 
+  mutate(x = ifelse(x == 0,NA,x)) %>% 
+  mutate(y = ifelse(y == 0,NA,y)) %>% 
+  mutate(z = ifelse(z == 0,NA,z)) 
+
+```
+
+
+Plot it again
+
+```{r, message=FALSE}
+
+stroke_level_no_zeros %>% 
+  mutate(hole = factor(hole, ordered = T)) %>%
+  ggplot(mapping = aes(x = x,
+                       y = y,
+                       color = hole)) +
+  geom_point() +
+  coord_equal(clip = "off") +
+  theme()
+
+
+```
+
+
+
+Plot the cut
+
+```{r, message=FALSE}
+
+stroke_level_no_zeros %>% 
+  group_by(to_location_scorer,
+           to_location_laser) %>% 
+  summarize(shots = n()) %>% 
+  as.data.frame() %>% 
+  arrange(to_location_scorer,
+          to_location_laser)
+
+```
+
+
+```{r, message=FALSE}
+
+stroke_level_with_cut = stroke_level_no_zeros %>% 
   mutate(result_cut = case_when(to_location_scorer == 'Fairway' ~ 'fairway',
+                                to_location_scorer %in% c('Fairway Bunker', 'Green Side Bunker') ~ 'bunker',
                                 to_location_scorer %in% c('Intermediate Rough','Primary Rough') ~ 'rough',
                                 to_location_scorer == 'Green' ~ 'green',
+                                is.na(x) ~ 'hole',
                                 T ~ 'other'))
 
-intial_plot = strokes_clean %>%
-  mutate(hole = factor(hole, ordered = T)) %>% 
-  filter(x > 0) %>%
+
+stroke_level_with_cut$result_cut %>% 
+  table()
+
+```
+
+
+
+```{r, message=FALSE}
+
+stroke_level_with_cut %>% 
+  ggplot(mapping = aes(x = x,
+                       y = y,
+                       color = result_cut)) +
+  geom_point()
+
+```
+
+```{r, message=FALSE}
+
+result_cut_colors = c('bunker'='tan',
+                      'fairway'='green',
+                      'green'='lightgreen',
+                      'rough'='darkgreen',
+                      'other'='red')
+
+
+stroke_level_with_cut %>% 
   ggplot(mapping = aes(x = x,
                        y = y,
                        color = result_cut)) +
   geom_point() +
-  coord_equal(clip = "off") +
-  theme(legend.position = "bottom")
-
-intial_plot
-
+  scale_color_manual(values = result_cut_colors) +
+  coord_equal()
 
 ```
+
+
+```{r, message=FALSE}
+
+stroke_level_with_cut %>% 
+  filter(hole == 1) %>% 
+  ggplot(mapping = aes(x = x,
+                       y = y,
+                       color = result_cut)) +
+  geom_point() +
+  scale_color_manual(values = result_cut_colors) +
+  coord_equal()
+
+```
+
+Going to add these cleaning steps to a function
+
+
+

@@ -32,6 +32,8 @@ RUN R -e 'install.packages(pkgs = c("xgboost"))'
 RUN R -e 'install.packages(pkgs = c("e1071"))'
 RUN R -e 'install.packages(pkgs = c("randomForest"))'
 RUN R -e 'install.packages(pkgs = c("ggbeeswarm"))'
+RUN R -e 'install.packages(pkgs = c("janitor"))'
+RUN R -e 'install.packages(pkgs = c("reactable"))'
 
 #set up project directory
 RUN mkdir -m 777 /home/rstudio/project
