@@ -74,7 +74,13 @@ plot_tee_shot = function(hole_num = 5) {
            correct) %>% 
     mutate(data_type = 'acutal_shots')
   
-  hole_shots
+  accuracy = hole_shots %>% 
+    group_by(correct) %>% 
+    summarize(n = n()) %>% 
+    pivot_wider(names_from = correct,
+                values_from = n) %>% 
+    mutate(accuracy = yes/(yes + no)) %>% 
+    pull(accuracy)
   
   hole_min_x = min(hole_shots$x)
   
@@ -98,9 +104,9 @@ plot_tee_shot = function(hole_num = 5) {
     pull(par_value) %>% 
     unique()
   
-  plot_title = paste0("Hole ",hole_num)
+  plot_title = paste0("Hole ",hole_num," | Par ",hole_par_value)
   
-  plot_subtitle = paste0("Par ",hole_par_value)
+  plot_subtitle = paste0("Out-of-sample Accuracy = ", scales::percent(accuracy))
   
   ggplot() +
     geom_tile(data = hole_grid,
