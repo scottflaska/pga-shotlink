@@ -1,4 +1,4 @@
-Ball Location Classifier
+Fairway Classifier
 ================
 
 ``` r
@@ -7,8 +7,6 @@ library(tidyverse)
 library(caret)
 
 library(recipes)
-
-library(patchwork)
 
 source("~/project/functions/prepare_shot_data.R")
 
@@ -44,11 +42,12 @@ trained_model = caret::train(result_cut ~ x + y,
                              trControl = ctrl,
                              tuneGrid = tune_grid)
 
-plot_hole_map = function(hole_num = 5) {
+plot_tee_shot = function(hole_num = 5) {
   
   hole_shots = shot_data %>% 
     filter(hole == hole_num,
-           shot == 1) %>% 
+           shot == 1
+           ) %>% 
     filter(!is.na(x)) %>% 
     select(result_cut,
            x,
@@ -95,7 +94,7 @@ plot_hole_map = function(hole_num = 5) {
     coord_equal() +
     scale_color_manual(values = result_cut_colors) +
     scale_fill_manual(values = result_cut_colors) +
-    theme(legend.position = "none",
+    theme(legend.position = "bottom",
           axis.text = element_blank(),
           axis.ticks = element_blank(),
           panel.grid = element_blank(),
@@ -105,15 +104,8 @@ plot_hole_map = function(hole_num = 5) {
 
 }
 
-plot_hole_map(1)
-```
-
-![](readme_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
-
-``` r
 1:18 %>%
-    map(.f = plot_hole_map) %>%
-    wrap_plots(ncol = 6,nrow = 3)
+    map(.f = plot_tee_shot)
 ```
 
-![](readme_files/figure-gfm/unnamed-chunk-2-2.png)<!-- -->
+![](readme_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->![](readme_files/figure-gfm/unnamed-chunk-2-2.png)<!-- -->![](readme_files/figure-gfm/unnamed-chunk-2-3.png)<!-- -->![](readme_files/figure-gfm/unnamed-chunk-2-4.png)<!-- -->![](readme_files/figure-gfm/unnamed-chunk-2-5.png)<!-- -->![](readme_files/figure-gfm/unnamed-chunk-2-6.png)<!-- -->![](readme_files/figure-gfm/unnamed-chunk-2-7.png)<!-- -->![](readme_files/figure-gfm/unnamed-chunk-2-8.png)<!-- -->![](readme_files/figure-gfm/unnamed-chunk-2-9.png)<!-- -->![](readme_files/figure-gfm/unnamed-chunk-2-10.png)<!-- -->![](readme_files/figure-gfm/unnamed-chunk-2-11.png)<!-- -->![](readme_files/figure-gfm/unnamed-chunk-2-12.png)<!-- -->![](readme_files/figure-gfm/unnamed-chunk-2-13.png)<!-- -->![](readme_files/figure-gfm/unnamed-chunk-2-14.png)<!-- -->![](readme_files/figure-gfm/unnamed-chunk-2-15.png)<!-- -->![](readme_files/figure-gfm/unnamed-chunk-2-16.png)<!-- -->![](readme_files/figure-gfm/unnamed-chunk-2-17.png)<!-- -->![](readme_files/figure-gfm/unnamed-chunk-2-18.png)<!-- -->

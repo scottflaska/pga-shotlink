@@ -1,5 +1,5 @@
 ---
-title: Ball Location Classifier
+title: Fairway Classifier
 output: 
   github_document:
     html_preview: true
@@ -16,8 +16,6 @@ library(caret)
 
 library(recipes)
 
-library(patchwork)
-
 source("~/project/functions/prepare_shot_data.R")
 
 source("~/project/functions/plot_shot_data.R")
@@ -29,7 +27,7 @@ plot_shot_data(shot_data)
 ```
 
 
-```{r, message=FALSE}
+```{r, message=FALSE, results='hide'}
 
 train_data = shot_data %>% 
   select(result_cut, x, y) %>% 
@@ -51,11 +49,12 @@ trained_model = caret::train(result_cut ~ x + y,
                              trControl = ctrl,
                              tuneGrid = tune_grid)
 
-plot_hole_map = function(hole_num = 5) {
+plot_tee_shot = function(hole_num = 5) {
   
   hole_shots = shot_data %>% 
     filter(hole == hole_num,
-           shot == 1) %>% 
+           shot == 1
+           ) %>% 
     filter(!is.na(x)) %>% 
     select(result_cut,
            x,
@@ -102,7 +101,7 @@ plot_hole_map = function(hole_num = 5) {
     coord_equal() +
     scale_color_manual(values = result_cut_colors) +
     scale_fill_manual(values = result_cut_colors) +
-    theme(legend.position = "none",
+    theme(legend.position = "bottom",
           axis.text = element_blank(),
           axis.ticks = element_blank(),
           panel.grid = element_blank(),
@@ -112,10 +111,7 @@ plot_hole_map = function(hole_num = 5) {
 
 }
 
-plot_hole_map(1)
-
 1:18 %>%
-    map(.f = plot_hole_map) %>%
-    wrap_plots(ncol = 6,nrow = 3)
+    map(.f = plot_tee_shot)
 
 ```
