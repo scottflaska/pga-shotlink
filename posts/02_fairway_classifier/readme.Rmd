@@ -7,6 +7,7 @@ output:
     
 ---
 
+# Load data and functions
 
 ```{r, message=FALSE}
 
@@ -28,6 +29,8 @@ plot_shot_data(shot_data)
 
 ```
 
+
+# Train model
 
 ```{r, message=FALSE, results='hide'}
 
@@ -75,7 +78,7 @@ plot_tee_shot = function(hole_num = 5) {
            correct) %>% 
     mutate(data_type = 'acutal_shots')
   
-  
+  hole_shots
   
   hole_min_x = min(hole_shots$x)
   
@@ -85,7 +88,7 @@ plot_tee_shot = function(hole_num = 5) {
   
   hole_max_y = max(hole_shots$y)
   
-  grid_space = 5
+  grid_space = 1
   
   hole_grid = expand.grid(x = seq(hole_min_x, hole_max_x, grid_space),
                           y = seq(hole_min_y, hole_max_y, grid_space))

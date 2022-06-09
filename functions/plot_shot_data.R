@@ -1,10 +1,7 @@
 plot_shot_data = function(shot_data) {
   
-  result_cut_colors = c('bunker'='tan',
-                        'fairway'='green',
-                        'green'='lightgreen',
-                        'rough'='darkgreen',
-                        'other'='red')
+  
+  source("~/project/utils/result_cut_colors.R")
   
   shot_data %>% 
     ggplot(mapping = aes(x = x,

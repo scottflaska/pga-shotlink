@@ -1,6 +1,11 @@
 Fairway Classifier
 ================
 
+-   [Load data and functions](#load-data-and-functions)
+-   [Train model](#train-model)
+
+# Load data and functions
+
 ``` r
 library(tidyverse)
 
@@ -22,6 +27,8 @@ plot_shot_data(shot_data)
     ## Warning: Removed 2187 rows containing missing values (geom_point).
 
 ![](readme_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+
+# Train model
 
 ``` r
 train_data = shot_data %>% 
@@ -57,15 +64,6 @@ train_with_resample_preds = bind_cols(train_data,
 
 plot_tee_shot = function(hole_num = 5) {
   
-  hole_par_value = train_with_resample_preds %>% 
-    filter(hole == hole_num) %>% 
-    pull(par_value) %>% 
-    unique()
-  
-  plot_title = paste0("Hole ",hole_num)
-  
-  plot_subtitle = paste0("Par ",hole_par_value)
-  
   hole_shots = train_with_resample_preds %>% 
     filter(hole == hole_num,
            shot == 1) %>% 
@@ -77,6 +75,8 @@ plot_tee_shot = function(hole_num = 5) {
            correct) %>% 
     mutate(data_type = 'acutal_shots')
   
+  hole_shots
+  
   hole_min_x = min(hole_shots$x)
   
   hole_max_x = max(hole_shots$x)
@@ -85,7 +85,7 @@ plot_tee_shot = function(hole_num = 5) {
   
   hole_max_y = max(hole_shots$y)
   
-  grid_space = 5
+  grid_space = 1
   
   hole_grid = expand.grid(x = seq(hole_min_x, hole_max_x, grid_space),
                           y = seq(hole_min_y, hole_max_y, grid_space))
@@ -93,6 +93,15 @@ plot_tee_shot = function(hole_num = 5) {
   hole_grid$prediction = predict(trained_model, newdata = hole_grid)
   
   hole_grid$data_type = 'classifier'
+  
+  hole_par_value = train_with_resample_preds %>% 
+    filter(hole == hole_num) %>% 
+    pull(par_value) %>% 
+    unique()
+  
+  plot_title = paste0("Hole ",hole_num)
+  
+  plot_subtitle = paste0("Par ",hole_par_value)
   
   ggplot() +
     geom_tile(data = hole_grid,
