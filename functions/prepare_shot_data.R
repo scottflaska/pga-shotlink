@@ -34,6 +34,7 @@ prepare_shot_data = function() {
                                   to_location_scorer == 'Green' ~ 'green',
                                   is.na(x) ~ 'hole',
                                   T ~ 'other')) %>% 
+    mutate(result_cut = factor(result_cut)) %>% 
     mutate(hole = factor(hole, ordered = T))
   
   return(shot_data)
