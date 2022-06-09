@@ -104,7 +104,7 @@ plot_tee_shot = function(hole_num = 5) {
     pull(par_value) %>% 
     unique()
   
-  plot_title = paste0("Hole ",hole_num," | Par ",hole_par_value)
+  plot_title = paste0("Tee Shot | Hole ",hole_num," | Par ",hole_par_value)
   
   plot_subtitle = paste0("Out-of-sample Accuracy = ", scales::percent(accuracy))
   
