@@ -35,7 +35,6 @@ plot_shot_data(shot_data)
 ```{r, message=FALSE, results='hide'}
 
 train_data = shot_data %>% 
-  # select(result_cut, x, y) %>% 
   filter(!is.na(result_cut),
          !is.na(x),
          !is.na(y)) %>% 
@@ -88,7 +87,7 @@ plot_tee_shot = function(hole_num = 5) {
   
   hole_max_y = max(hole_shots$y)
   
-  grid_space = 1
+  grid_space = 3
   
   hole_grid = expand.grid(x = seq(hole_min_x, hole_max_x, grid_space),
                           y = seq(hole_min_y, hole_max_y, grid_space))
