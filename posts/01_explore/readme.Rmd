@@ -13,6 +13,8 @@ Three data sets
 
 check out stroke level
 
+# Load shot data
+
 ```{r, message=FALSE}
 
 library(tidyverse)
@@ -23,6 +25,8 @@ stroke_level_import %>%
   str()
 
 ```
+
+# Clean column names
 
 Cool data, want to fix column names
 
@@ -40,6 +44,8 @@ stroke_level_clean_names %>%
 
 
 ```
+
+# Clean coordinate data
 
 Convert coordinates to numbers
 
@@ -225,6 +231,70 @@ stroke_level_with_cut %>%
   coord_equal()
 
 ```
+
+
+```{r, message=FALSE}
+
+stroke_level_with_cut %>% 
+  filter(hole == 1) %>% 
+  ggplot(mapping = aes(x = x,
+                       y = y,
+                       color = result_cut)) +
+  geom_point() +
+  scale_color_manual(values = result_cut_colors) +
+  coord_equal()
+
+```
+# Estimate Pin Locations
+
+```{r, message=FALSE}
+
+shots_remaining = stroke_level_with_cut %>% 
+  group_by(player,
+           player_first_name,
+           player_last_name,
+           round,
+           hole) %>% 
+  mutate(shots_remaining = row_number(desc(shot))) %>% 
+  as.data.frame() 
+
+
+shots_remaining %>% 
+  mutate(shots_remaining = factor(shots_remaining, ordered = T)) %>% 
+  filter(hole == 1,
+         round == 1) %>% 
+   ggplot(mapping = aes(x = x,
+                       y = y,
+                       color = shots_remaining)) +
+  geom_point() +
+  coord_equal()
+  
+
+last_shot = shots_remaining %>%
+  filter(shots_remaining == 2)
+  
+last_shot %>% 
+  mutate(round = factor(round, ordered = T)) %>% 
+  ggplot(mapping = aes(x = x,
+                       y = y,
+                       color = round)) +
+  geom_point() +
+  coord_equal()
+
+
+last_shot %>% 
+  filter(hole == 3,
+         result_cut == 'green') %>% 
+  mutate(round = factor(round, ordered = T)) %>% 
+  ggplot(mapping = aes(x = x,
+                       y = y,
+                       color = round,
+                       size = distance_to_hole_after_the_shot/12)) +
+  geom_point(alpha = 0.5) +
+  coord_equal()
+
+```
+
 
 Going to add these cleaning steps to a function
 

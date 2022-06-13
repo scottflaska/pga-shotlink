@@ -2,11 +2,17 @@ Exploring [PGA
 ShotLink](https://www.pgatour.com/stats/shotlinkintelligence/overview.html)
 ================
 
+-   [Load shot data](#load-shot-data)
+-   [Clean column names](#clean-column-names)
+-   [Clean coordinate data](#clean-coordinate-data)
+
 Take a look at the data
 
 Three data sets
 
 check out stroke level
+
+# Load shot data
 
 ``` r
 library(tidyverse)
@@ -57,6 +63,8 @@ stroke_level_import %>%
     ##  $ Distance.from.Center           : int  562 232 33 0 214 0 127 15 2 0 ...
     ##  $ Distance.from.Edge             : int  126 25 199 0 347 0 344 32 140 0 ...
 
+# Clean column names
+
 Cool data, want to fix column names
 
 ``` r
@@ -89,6 +97,8 @@ stroke_level_clean_names %>%
     ## [33] "slope"                           "x_coordinate"                   
     ## [35] "y_coordinate"                    "z_coordinate"                   
     ## [37] "distance_from_center"            "distance_from_edge"
+
+# Clean coordinate data
 
 Convert coordinates to numbers
 
